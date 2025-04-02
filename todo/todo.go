@@ -4,11 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
 
 type Todo struct {
-	Title string `json:"text"`
+	Title string `json:"text" binding:"required"`
 	gorm.Model
 }
 
