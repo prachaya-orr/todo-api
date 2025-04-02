@@ -5,6 +5,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
+	"todo-api/auth"
 	"todo-api/todo"
 )
 
@@ -14,12 +15,15 @@ func main() {
 		panic("failed to connect database")
 	}
 	db.AutoMigrate(&todo.Todo{})
+
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
+
+	r.GET("/tokenz", auth.AccessToken)
 
 	handler := todo.NewTodoHandler(db)
 	r.POST("/todos", handler.NewTask)

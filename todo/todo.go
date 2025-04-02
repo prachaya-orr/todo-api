@@ -2,6 +2,8 @@ package todo
 
 import (
 	"net/http"
+	"strings"
+	"todo-api/auth"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-playground/validator/v10"
@@ -26,6 +28,14 @@ func NewTodoHandler(db *gorm.DB) *TodoHandler {
 }
 
 func (t *TodoHandler) NewTask(c *gin.Context) {
+	s := c.Request.Header.Get("Authorization")
+	tokenString := strings.TrimPrefix(s, "Bearer ")
+
+	if err := auth.Protect(tokenString); err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
 	var todo Todo
 	if err := c.ShouldBindJSON(&todo); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
