@@ -1,9 +1,10 @@
 package todo
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type Todo struct {
@@ -31,4 +32,15 @@ func (t *TodoHandler) NewTask(c *gin.Context) {
 		})
 		return
 	}
+	r := t.db.Create(&todo)
+	if err := r.Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"ID": todo.Model.ID,
+	})
 }
