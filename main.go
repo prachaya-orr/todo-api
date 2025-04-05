@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -10,6 +12,7 @@ import (
 	"gorm.io/gorm"
 
 	"todo-api/auth"
+	"todo-api/server"
 	"todo-api/todo"
 )
 
@@ -39,5 +42,12 @@ func main() {
 	todoHandler := todo.NewTodoHandler(db)
 	proctected.POST("/todos", todoHandler.NewTask)
 
-	r.Run()
+	s := &http.Server{
+		Addr:           ":" + os.Getenv("PORT"),
+		Handler:        r,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	server.ListenAndServeWithGracefulShutdown(s)
 }
