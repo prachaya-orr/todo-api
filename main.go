@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"golang.org/x/time/rate"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
@@ -52,6 +53,7 @@ func main() {
 			"message": "pong",
 		})
 	})
+	r.GET("/limitz", limitHandler)
 	r.GET("/x", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"buidcommit": buildcommit,
@@ -73,4 +75,17 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 	server.ListenAndServeWithGracefulShutdown(s)
+}
+
+// maybe use as a middleWare
+var limiter = rate.NewLimiter(10, 5)
+
+func limitHandler(c *gin.Context) {
+	if !limiter.Allow() {
+		c.AbortWithStatus(http.StatusTooManyRequests)
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "pong",
+	})
 }
