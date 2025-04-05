@@ -16,6 +16,11 @@ import (
 	"todo-api/todo"
 )
 
+var (
+	buildcommit = "dev"
+	buildtime   = time.Now().String()
+)
+
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
@@ -34,9 +39,14 @@ func main() {
 			"message": "pong",
 		})
 	})
+	r.GET("/x", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"buidcommit": buildcommit,
+			"buildtime":  buildtime,
+		})
+	})
 
 	r.GET("/tokenz", auth.AccessToken(os.Getenv("SIGN")))
-
 	proctected := r.Group("", auth.ProtectMiddleware([]byte(os.Getenv("SIGN"))))
 
 	todoHandler := todo.NewTodoHandler(db)
