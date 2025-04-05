@@ -1,0 +1,17 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: somemariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword # Replace with a strong password
+      MYSQL_DATABASE: todo-api        # Replace with your database name
+      MYSQL_USER: user            # Replace with your database user
+      MYSQL_PASSWORD: my-secret-pw       # Replace with a strong password
+    ports:
+      - "3306:3306" # Expose MariaDB on port 3306
+    volumes:
+      - mariadb_data:/var/lib/mysql    # Persist database data
+
+volumes:
+  mariadb_data:
