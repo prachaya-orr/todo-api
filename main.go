@@ -32,7 +32,7 @@ func main() {
 	}
 	defer os.Remove("/tmp/live")
 
-	err = godotenv.Load(".env")
+	err = godotenv.Load("./local.env")
 	if err != nil {
 		log.Printf("please consider environment variables: %s", err)
 	}
