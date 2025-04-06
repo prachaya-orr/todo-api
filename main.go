@@ -79,6 +79,7 @@ func main() {
 
 	todoHandler := todo.NewTodoHandler(db)
 	proctected.POST("/todos", todoHandler.NewTask)
+	proctected.GET("/todos", todoHandler.List)
 
 	s := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),
