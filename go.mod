@@ -10,7 +10,10 @@ require (
 	gorm.io/gorm v1.25.12
 )
 
-require github.com/go-sql-driver/mysql v1.7.0 // indirect
+require (
+	github.com/gin-contrib/cors v1.7.5 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
+)
 
 require (
 	github.com/bytedance/sonic v1.13.2 // indirect
